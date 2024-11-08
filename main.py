@@ -35,21 +35,99 @@ def generate_gradebook(students: list[tuple], activities: dict[str: dict[str: fl
     """
     ...
 
-def update_grade(gradebook: dict, student: str, activity: tuple[str, str], grade: float) -> dict:
+
+def update_grade(gradebook: dict[tuple: dict[str: dict[str: float]]], activities:\
+                 dict[str: dict[str: float]], student: str, activity: tuple[str, str],\
+                    grade: float | str) -> dict[tuple: dict[str: dict[str: float]]]:
     """
     updates given {students} grade for given {activity} in {gradebook}. Returns new gradebook
 
     Args:
         gradebook (dict): of format like generate_gradebook()
-        student (str): ПІБ
+        student (str): Прізвище, Ім'я
         activity (tuple[str, str]): ("Лабораторні роботи", "Лаба1")
         grade (float):
 
     Returns:
         dict: gradebook
-    """
 
-    ...
+    >>> gradebook = {
+    ...     ("Doe", "John", "john.doe@example.com", "Group A"): {
+    ...         "Лабораторні роботи": {
+    ...             "Лаба1": 8.5,
+    ...             "Лаба2": 7.0
+    ...         },
+    ...         "Практичні заняття": {
+    ...             "Практика1": 9.0,
+    ...             "Практика2": 8.5
+    ...         }
+    ...     },
+    ...     ("Smith", "Jane", "jane.smith@example.com", "Group B"): {
+    ...         "Лабораторні роботи": {
+    ...             "Лаба1": 9.0,
+    ...             "Лаба2": 8.0
+    ...         },
+    ...         "Практичні заняття": {
+    ...             "Практика1": 8.0,
+    ...             "Практика2": 7.0
+    ...         }
+    ...     },
+    ...     ("Melnyk", "Ivan", "ivan.melnyk@example.com", "Group A"): {
+    ...         "Лабораторні роботи": {
+    ...             "Лаба1": 7.5,
+    ...             "Лаба2": 8.0
+    ...         },
+    ...         "Практичні заняття": {
+    ...             "Практика1": 8.5,
+    ...             "Практика2": 7.0
+    ...         }
+    ...     }
+    ... }
+    >>> activities = {
+    ...     "Лабораторні роботи": {
+    ...         "Лаба1": 10.0,
+    ...         "Лаба2": 12.0
+    ...     },
+    ...     "Практичні заняття": {
+    ...         "Практика1": 10.0,
+    ...         "Практика2": 12.0
+    ...     }
+    ... }
+    >>> gradebook = update_grade(gradebook, activities, 'Smith Jane', \
+        ('Лабораторні роботи', 'Лаба2'), 5.7)
+    >>> print(gradebook[("Smith", "Jane", "jane.smith@example.com", "Group B")]\
+        ['Лабораторні роботи']['Лаба2'])
+    5.7
+    >>> gradebook = update_grade(gradebook, activities, 'Doe John', \
+        ('Практичні заняття', 'Практика1'), 7.7)
+    >>> print(gradebook[("Doe", "John", "john.doe@example.com", "Group A")]\
+        ['Практичні заняття']['Практика1'])
+    7.7
+    >>> gradebook = update_grade(gradebook, activities, 'Melnyk Ivan', \
+        ('Лабораторні роботи', 'Лаба1'), 20.0)
+    >>> print(gradebook[("Melnyk", "Ivan", "ivan.melnyk@example.com", "Group A")]\
+        ['Лабораторні роботи']['Лаба1'])
+    7.5
+    >>> gradebook = update_grade(gradebook, activities, 'Smith Jane', \
+        ('Практичні заняття', 'Практика2'), -3.0)
+    >>> print(gradebook[("Smith", "Jane", "jane.smith@example.com", "Group B")]\
+        ['Практичні заняття']['Практика2'])
+    7.0
+    >>> gradebook = update_grade(gradebook, activities, 'Doe John', \
+        ('Практичні заняття', 'Практика1'), 'No grade')
+    >>> print(gradebook[("Doe", "John", "john.doe@example.com", "Group A")]\
+        ['Практичні заняття']['Практика1'])
+    No grade
+    """
+    if isinstance(grade, float) and (grade < 0 or grade > activities[activity[0]][activity[1]]):
+        return gradebook
+    student = student.split()
+    last_name, first_name = student[0], student[1]
+    for student_profile in gradebook.keys():
+        if student_profile[0] == last_name and student_profile[1] == first_name:
+            gradebook[student_profile][activity[0]][activity[1]] = grade
+    return gradebook
+
 
 def read_grades_from_file(filepath: str) -> dict:
     ...
