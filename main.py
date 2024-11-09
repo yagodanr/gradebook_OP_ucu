@@ -10,7 +10,23 @@ def read_students(filepath: str) -> list[tuple]:
     reads information about students from csv file
 
     """
-    ...
+    with open(filepath, 'r', encoding='utf-8') as file:
+        text = file.readlines()
+
+        text = text[1::]
+
+        student_list = []
+
+        for line in text:
+            line = line.strip()
+
+            striped = line.strip(',')
+
+            student_list.append(tuple(striped))
+
+        return student_list
+
+
 
 def generate_gradebook(students: list[tuple], activities: dict[str: dict[str: float]]) \
                                 -> dict[tuple: dict[str: dict[str: float]]]:
@@ -33,7 +49,12 @@ def generate_gradebook(students: list[tuple], activities: dict[str: dict[str: fl
         }
     }
     """
-    ...
+    gradebook = {}
+
+    for el in students:
+        gradebook[el] = activities
+
+    return gradebook
 
 def update_grade(gradebook: dict, student: str, activity: tuple[str, str], grade: float) -> dict:
     """
