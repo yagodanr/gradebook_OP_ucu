@@ -281,14 +281,66 @@ def dump_gradebook(gradebook: dict, filepath: str):
 
 def dump_student_grades(gradebook: dict, student: tuple, filepath: str):
     """
-    можливість вивантаження грейдбуку для студента, заповненим оцінками у json файл.
+    The possibility of exporting the gradebook for a student, filled with grades, to a JSON file.
 
     Args:
-        gradebook (dict): _description_
-        student (tuple): _description_
-        filepath (str): _description_
+        gradebook (dict): The gradebook with students' grades.
+        student (tuple): The student for whom grades are set.
+        filepath (str): The name of the file to write JSON.
+    
+    Doctest:
+    >>> import tempfile
+    >>> with tempfile.NamedTemporaryFile(mode='w+', encoding='utf_8', delete = False) as temp_file:
+    ...     temp_filepath = temp_file.name
+    ...     dump_student_grades({
+    ...         ('Михасяк', 'Ярема', 'ucu@ucu.com'): {
+    ...             "Фінальний іспит": {
+    ...                 "Теоретичне завдання": 8,
+    ...                 "Завдання на програмування": 22
+    ...             }
+    ...         },
+    ...         ('Стрийська', 'Білочка', 'parku@cu.com', '+380933333333'): {
+    ...             "Фінальний іспит": {
+    ...                 "Теоретичне завдання": 2,
+    ...                 "Завдання на програмування": 100
+    ...             }
+    ...         }
+    ...     }, ('Михасяк', 'Ярема', 'ucu@ucu.com') ,temp_filepath)
+    ...     print(temp_file.read())
+    {
+      "Фінальний іспит": {
+        "Теоретичне завдання": 8,
+        "Завдання на програмування": 22
+      }
+    }
     """
-    ...
+    if len(student) == 0:
+        print("The information of a student is empty.")
+        return
+
+    if len(gradebook) == 0:
+        print("The gradebook is empty.")
+        return
+
+    if student not in gradebook:
+        print("There is no student with given information in the gradebook")
+        return
+
+    student_info = gradebook[student]
+
+    try:
+        with open(filepath, 'w', encoding = 'utf-8') as file:
+            json.dump(student_info, file, ensure_ascii = False, indent = 2)
+    except FileNotFoundError:
+        print(f"Error: The file path '{filepath}' does not exist.")
+    except PermissionError:
+        print(f"Error: Insufficient permissions to write to '{filepath}'.")
+    except TypeError as err:
+        print(f"Error: Failed to serialize gradebook to JSON - {err}.")
+    except OSError as err:
+        print(f"OS error occurred: {err}.")
+
+    return
 
 
 def get_student_by_info(student: list[tuple], student_info: str) -> tuple:
