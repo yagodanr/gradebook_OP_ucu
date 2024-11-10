@@ -176,8 +176,38 @@ def gradebook_to_letters_grade(gradebook: dict) -> dict[tuple, str]:
 
     Returns:
         list[tuple[tuple, float]] -- list of (student_info, grade)
+
+    >>> gradebook = {\
+            ("Тимченко", "Ольга", "gduplii@ivanchenko-vernydub.net"): {\
+                "Лабораторні роботи": {"Лаба1": 80, "Лаба2": 75},
+                "Практичні заняття": {"Практика1": 85, "Практика2": 90}\
+            },\
+            ("Давиденко", "Олекса", "ieshchenkodmytro@gmail.com"): {\
+                "Лабораторні роботи": {"Лаба1": 70, "Лаба2": 60},\
+                "Практичні заняття": {"Практика1": 75, "Практика2": 80}\
+            }\
+        }\
+    >>> gradebook_to_letters_grade(gradebook)
+        {\
+            ("Тимченко", "Ольга", "gduplii@ivanchenko-vernydub.net"): "B",\
+            ("Давиденко", "Олекса", "ieshchenkodmytro@gmail.com"): "C"\
+        }\
     """
-    ...
+    gradebook_with_letters = {}
+
+    for student, info in gradebook.items():
+        grades = []
+        for e in info.values():
+            for grade in e.values():
+                grades.append(grade)
+
+        sum_grades = sum(grades)
+        if sum_grades > 100:
+            sum_grades = 100
+        grade_letter = grade_to_letters(sum_grades, 100.0)
+        gradebook_with_letters[student] = grade_letter
+
+    return gradebook_with_letters
 
 
 def get_talons(gradebook: dict) -> list[tuple]:
