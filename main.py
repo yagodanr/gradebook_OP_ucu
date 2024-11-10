@@ -75,6 +75,14 @@ def add_activity(gradebook: dict, activities: dict, activity: tuple[str, str], m
         activity (tuple[str, str]): ("Лабораторні роботи", "Лаба1")
         max_grade (float): _description_
 
+    >>> gradebook = {('name1', 'surname1'): {'labs': {'lab1': 1, 'lab2': 3}},
+    ...              ('name2', 'surname2'): {'labs': {'lab1': 4, 'lab2': 2}}}
+    >>> activities = {'labs': {'lab1': 1, 'lab2': 3}}
+    >>> add_activity(gradebook, activities, ('tests', 'test1'), 3)
+    >>> print(f'{activities = }, {gradebook = }')
+    activities = {'labs': {'lab1': 1, 'lab2': 3}, 'tests': {'test1': 3}}, \
+gradebook = {('name1', 'surname1'): {'labs': {'lab1': 1, 'lab2': 3}, 'tests': {'test1': 0}}, \
+('name2', 'surname2'): {'labs': {'lab1': 4, 'lab2': 2}, 'tests': {'test1': 0}}}
     """
     act, sub_act = activity
     if act not in activities.keys():
