@@ -421,16 +421,29 @@ def dump_student_grades(gradebook: dict, student: tuple, filepath: str):
     return
 
 
-def get_student_by_info(student: list[tuple], student_info: str) -> tuple:
-    """Микита напише всьо чікі-пукі
+def get_student_by_info(students: list[tuple], student_info: str) -> tuple|None:
+    """
+    Returns first accurency of student by some provided info about them.
 
     Args:
-        student (list[tuple]): _description_
-        student_info (str): _description_
+        students (list[tuple]): list of infos about student [(name, surname, email, phone, ...)]
+        student_info (str): any of info specified in student's tuple: name or surname or email or...
 
     Returns:
-        tuple: _description_
+        tuple: (name, surname, email, phone, ...)
+                None if students wasn't found
+
+    >>> get_student_by_info([("Тимченко","Ольга","gduplii@ivanchenko-vernydub.net","B"), \
+("Давиденко","Олекса","ieshchenkodmytro@gmail.com","B"), \
+("Гаєвський","Володимир","qzasukha@pavlychenko.info","A"), \
+("Сіробаба","Хома","iaroslav53@palii.info","B"), \
+("Щорс","Костянтин","kamilla48@satsiuk.net","A")], "Сіробаба")
+    ('Сіробаба', 'Хома', 'iaroslav53@palii.info', 'B')
     """
+    for stud in students:
+        if student_info in stud:
+            return stud
+    return None
 
 
 def main():
