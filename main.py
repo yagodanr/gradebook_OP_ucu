@@ -377,9 +377,34 @@ def get_talons(gradebook: dict) -> list[tuple]:
         gradebook (dict): _description_
 
     Returns:
-        list[tuple]: [student_info, ]
+        list[tuple]: [student_info]
+
+    >>> gradebook = {\
+            ("Тимченко", "Ольга", "gduplii@ivanchenko-vernydub.net"): {\
+                "Лабораторні роботи": {"Лаба1": 40, "Лаба2": 20},\
+                "Практичні заняття": {"Практика1": 35, "Практика2": 30}\
+            },\
+            ("Давиденко", "Олекса", "ieshchenkodmytro@gmail.com"): {\
+                "Лабораторні роботи": {"Лаба1": 50, "Лаба2": 45},\
+                "Практичні заняття": {"Практика1": 55, "Практика2": 58}\
+            }\
+        }\
+
+    >>> get_talons(gradebook)
+
     """
-    ...
+    students_with_talon = []
+
+    for students, info in gradebook.items():
+        grades = []
+        for e in info.values():
+            for grade in e.values():
+                grades.append(grade)
+        sum_grades = sum(grades)
+        if sum_grades < 60:
+            students_with_talon.append(students)
+
+    return students_with_talon
 
 
 def dump_gradebook(gradebook: dict, filepath: str):
