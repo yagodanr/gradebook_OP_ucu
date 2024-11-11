@@ -267,20 +267,20 @@ def get_sorted_gradebook(gradebook: dict, activity: str):
     ...
 
 
-def get_average_students_grade(grades: dict, activity: None | list[tuple[str, str]]) -> float:
-    """
-    From given grades (gradebook[student]) generates average grade
+# def get_average_students_grade(grades: dict, student: tuple, activity: None | list[tuple[str, str]]) -> float:
+#     """
+#     From given grades (gradebook[student]) generates average grade
 
-    Args:
-        grades (dict): _description_
-        activity (list[tuple[str, str]]): [("Лабораторні роботи", "Лаба1"), \
-            ("Лабораторні роботи", "Лаба2")]
-            if None -> all activities
+#     Args:
+#         grades (dict): _description_
+#         activity (list[tuple[str, str]]): [("Лабораторні роботи", "Лаба1"), \
+#             ("Лабораторні роботи", "Лаба2")]
+#             if None -> all activities
 
-    Returns:
-        float: _description_
-    """
-    ...
+#     Returns:
+#         float: _description_
+#     """
+#     ...
 
 
 def get_average_grade(gradebook: dict, activity: None | list[tuple[str, str]]) -> float:
@@ -295,6 +295,38 @@ def get_average_grade(gradebook: dict, activity: None | list[tuple[str, str]]) -
 
     Returns:
         float: _description_
+    
+    >>> gradebook = {
+    ...     "Student1": {
+    ...         "Лабораторні роботи": {"Лаба1": 3, "Лаба2": 4.0},
+    ...         "Проміжний іспит": {"Теоретичне завдання": 5.0}
+    ...     },
+    ...     "Student2": {
+    ...         "Лабораторні роботи": {"Лаба1": 4, "Лаба2": 5.0},
+    ...         "Проміжний іспит": {"Теоретичне завдання": 4.0}
+    ...     }
+    ... }
+    
+    # Test average grade for all activities
+    >>> get_average_grade(gradebook, None)
+    4.2
+
+    # Test average grade for a specific activity
+    >>> get_average_grade(gradebook, [("Лабораторні роботи", "Лаба1")])
+    3.5
+
+    # Test average grade for multiple specific activities
+    >>> get_average_grade(gradebook, [("Лабораторні роботи", "Лаба1"),\
+          ("Лабораторні роботи", "Лаба2")])
+    4.0
+
+    # Test with an empty gradebook
+    >>> get_average_grade({}, None)
+    0.0
+
+    # Test with activity not found in any student's record
+    >>> get_average_grade(gradebook, [("Лабораторні роботи", "Лаба3")])
+    0.0
     """
     total_grades = 0
     count = 0
@@ -313,7 +345,7 @@ def get_average_grade(gradebook: dict, activity: None | list[tuple[str, str]]) -
     if count == 0:
         return 0.0
 
-    return total_grades / count
+    return round(total_grades / count, 1)
 
 
 def grade_to_letters(grade: float, max_grade: float) -> str:
@@ -492,7 +524,7 @@ def dump_student_grades(gradebook: dict, student: tuple, filepath: str):
     ...                 "Завдання на програмування": 22
     ...             }
     ...         },
-    ...         ('Стрийська', 'Білочка', 'parku@cu.com', '+380933333333'): {
+    ...         ('Стрийська', 'Білочка', 'parku@ucu.com', '+380933333333'): {
     ...             "Фінальний іспит": {
     ...                 "Теоретичне завдання": 2,
     ...                 "Завдання на програмування": 100
@@ -632,7 +664,7 @@ def main():
                     if activity == "":
                         break
                     activities.append((activity_type, activity))
-                print(get_average_students_grade(gradebook, activities if activities else None))
+                print(get_average_grade(gradebook, activities if activities else None))
             case 7:
                 print(gradebook_to_letters_grade(gradebook))
             case 8:
