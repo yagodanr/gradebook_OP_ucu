@@ -20,7 +20,7 @@ def read_students(filepath: str) -> list[tuple]:
         for line in text:
             line = line.strip()
 
-            striped = line.strip(',')
+            striped = line.split(',')
 
             student_list.append(tuple(striped))
 
