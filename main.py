@@ -250,6 +250,7 @@ gradebook = {('name1', 'surname1'): {'labs': {'lab1': 1, 'lab2': 3}, 'tests': {'
 
     for stud in gradebook:
         stud_activity = gradebook[stud]
+        
         if act not in stud_activity.keys():
             stud_activity[act] = {}
         stud_activity[act][sub_act] = 0
