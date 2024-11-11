@@ -211,15 +211,18 @@ def read_gradebook(filepath: str, gradebook: dict|None = None) -> None|dict:
 
 def read_activities_from_sylabus(filepath: str) -> dict:
     """
-    reads activities types and max grades.
+    Reads activities types and max grades from a JSON file.
 
     Args:
-        filepath (str): json file
+        filepath (str): Path to the JSON file.
 
     Returns:
-        dict: activities_max
+        dict: Dictionary containing activities and their max grades.
     """
-    ...
+    with open(filepath, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+        return data
+
 
 
 def add_activity(gradebook: dict, activities: dict, activity: tuple[str, str], max_grade: float) -> None:
