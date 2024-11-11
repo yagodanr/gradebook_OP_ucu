@@ -296,7 +296,24 @@ def get_average_grade(gradebook: dict, activity: None | list[tuple[str, str]]) -
     Returns:
         float: _description_
     """
-    ...
+    total_grades = 0
+    count = 0
+    for _, activities in gradebook.items():
+        if activity is not None:
+            for act_type, act_name in activity:
+                if act_type in activities and act_name in activities[act_type]:
+                    total_grades += activities[act_type][act_name]
+                    count += 1
+        else:
+            for act_type, sub_activities in activities.items():
+                for grade in sub_activities.values():
+                    total_grades += grade
+                    count += 1
+
+    if count == 0:
+        return 0.0
+
+    return total_grades / count
 
 
 def grade_to_letters(grade: float, max_grade: float) -> str:
