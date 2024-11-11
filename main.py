@@ -165,8 +165,48 @@ def read_gradebook(filepath: str, gradebook: dict|None = None) -> None|dict:
     Returns:
         puts grades inplace if gradebook is specified
         Otherwise returns new gradebook from file
+    >>> import tempfile
+    >>> with tempfile.NamedTemporaryFile(mode = 'w+', encoding='utf_8', delete=False) as temp_file:
+    ...     dump_gradebook({
+    ...         ('Михасяк', 'Ярема', 'ucu@ucu.com'): {
+    ...             "Фінальний іспит": {
+    ...                 "Теоретичне завдання": 8,
+    ...                 "Завдання на програмування": 22
+    ...             }
+    ...         },
+    ...         ('Стрийська', 'Білочка', 'park@ucu.com', '+380933333333'): {
+    ...             "Фінальний іспит": {
+    ...                 "Теоретичне завдання": 2,
+    ...                 "Завдання на програмування": 100
+    ...             }
+    ...         }
+    ...     }, temp_file.name)
+    ...     read_gradebook(temp_file.name)
+    {('Михасяк', 'Ярема', 'ucu@ucu.com'): \
+{'Фінальний іспит': {'Теоретичне завдання': 8, \
+'Завдання на програмування': 22}}, \
+('Стрийська', 'Білочка', 'park@ucu.com', '+380933333333'): \
+{'Фінальний іспит': {'Теоретичне завдання': 2, \
+'Завдання на програмування': 100}}}
     """
-    ...
+    loaded_gradebook = None
+    try:
+        with open(filepath, 'r', encoding = 'utf-8') as file:
+            loaded_gradebook = json.load(file)
+    except FileNotFoundError:
+        print(f"Error: The file path '{filepath}' does not exist.")
+    except PermissionError:
+        print(f"Error: Insufficient permissions to write to '{filepath}'.")
+    except TypeError as err:
+        print(f"Error: Failed to serialize gradebook to JSON - {err}.")
+    except OSError as err:
+        print(f"OS error occurred: {err}.")
+    new_gradebook = {}
+    for key in loaded_gradebook:
+        new_key = tuple(key.split(","))
+        new_gradebook[new_key] = loaded_gradebook[key]
+    gradebook = new_gradebook
+    return gradebook
 
 
 def read_activities_from_sylabus(filepath: str) -> dict:
@@ -523,4 +563,6 @@ def main():
             case _:
                 print("Опція має бути в межах від 1 до 10")
 
-
+if __name__ == '__main__':
+    import doctest
+    print(doctest.testmod())
