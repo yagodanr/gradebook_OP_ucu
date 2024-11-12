@@ -373,13 +373,37 @@ def grade_to_letters(grade: float, max_grade: float) -> str:
     """
     transforms grade to letter
 
-    Args:
-        grade (float): _description_
+    Args: 
+        grade (float): the input receives a grade in the format float
 
-    Returns:
-        str: _description_
+    Returns: 
+        str: the function returns the letter grade according to the course syllabus
+    >>> grade_to_letters(98, 100)
+    'A'
+    >>> grade_to_letters(82, 100)
+    'C'
+    >>> grade_to_letters(74, 100)
+    'D'
+    >>> grade_to_letters(60, 100)
+    'E'
+    >>> grade_to_letters(54, 100)
+    'F'
+    >>> grade_to_letters(9.5, 10)
+    'A'
     """
-    ...
+    averega_grade = (grade / max_grade) * 100
+    if averega_grade >= 90:
+        return "A"
+    elif averega_grade >= 85:
+        return "B"
+    elif averega_grade >= 75:
+        return "C"
+    elif averega_grade >= 65:
+        return "D"
+    elif averega_grade >= 60:
+        return "E"
+    elif averega_grade >= 0:
+        return "F"
 
 
 def gradebook_to_letters_grade(gradebook: dict) -> dict[tuple, str]:
