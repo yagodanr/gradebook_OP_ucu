@@ -68,9 +68,10 @@ def update_grade(gradebook: dict[tuple: dict[str: dict[str: float]]], activities
 
     Args:
         gradebook (dict): of format like generate_gradebook()
-        student (str): Прізвище, Ім'я
+        activities (dict): a syllabus of a course with max allowed grades
+        student (str): Surname and Name of a student separated by a space
         activity (tuple[str, str]): ("Лабораторні роботи", "Лаба1")
-        grade (float):
+        grade (float or str): grade of 'No grade' if grade has not been set
 
     Returns:
         dict: gradebook
@@ -690,7 +691,7 @@ def main():
             case 1:
                 read_gradebook("gradebook.json", gradebook)
             case 2:
-                stud = input("Введіть ПІБ студента: ")
+                stud = input("Введіть прізвище та ім'я студента через пробіл: ")
                 activity_type = input("Введіть тип роботи за яку виставити оцінку: ")
                 activity = input("Введіть роботу за яку виставити оцінку: ")
                 grade = input("Введіть оцінку: ")
@@ -700,7 +701,8 @@ def main():
                     print("Оцінка має бути дійсним числом з крапкою")
                     continue
 
-                gradebook = update_grade(gradebook, stud, (activity_type, activity), grade)
+                gradebook = update_grade(gradebook, activities, stud, \
+                                         (activity_type, activity), grade)
             case 3:
                 activity_type = input("Введіть тип роботи за яку виставити оцінку: ")
                 activity = input("Введіть роботу за яку виставити оцінку: ")
