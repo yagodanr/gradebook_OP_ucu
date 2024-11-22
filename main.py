@@ -296,15 +296,61 @@ def get_summary_grade(gradebook: dict) -> dict[tuple: float]:
     """
 
 
-def get_sorted_gradebook(gradebook: dict, activity: str):
+def get_sorted_gradebook(gradebook: dict, activity: str=None) -> list[list[str, str, str, int]]:
     """
+    Returns a sorted list of students based on the specified activity type, 
+    or by total grade across all activities of this course if activity isn't specified.
     вивести впорядкований список студентів згідно якоїсь активності, типу активності, усього курсу.
 
     Args:
-        gradebook (dict): _description_
-        activity (str): _description_
+        gradebook (dict): A dictionary where keys are tuples with student info, 
+        and values are dictionaries with grades.
+        activity (str): A type of activity 
+        
+    Returns:
+        list: A sorted list of students by their score for the specified 
+        activity or total score if activity is None.
+
+    Example:
+    >>> gradebook = {
+    ...     ('Щорс', 'Костянтин', 'kamilla48@satsiuk.net', 'A'): {
+    ...         'Лабораторні роботи': {'Лабораторна робота 1': 2, 'Лабораторна робота 2': 2, 
+    ...         'Лабораторна робота 3': 2},
+    ...         'Проміжний іспит': {'Теоретичне завдання': 5, 'Завдання на програмування': 15},
+    ...     }
+    ... }
+    >>> get_sorted_gradebook(gradebook, 'Лабораторні роботи')
+    [['Щорс', 'Костянтин', 'kamilla48@satsiuk.net', 6]]
+    
+    >>> get_sorted_gradebook(gradebook)
+    [['Щорс', 'Костянтин', 'kamilla48@satsiuk.net', 26]]
+    >>> gradebook = {
+    ...     ('Тимченко', 'Ольга', 'gduplii@ivanchenko-vernydub.net', 'B'): {
+    ...         'Міні-проєкти': {'Міні-проєкт 1': 10, 'Міні-проєкт 2': 10}
+    ...     },
+    ...     ('Давиденко', 'Олекса', 'ieshchenkodmytro@gmail.com', 'B'): {
+    ...         'Міні-проєкти': {'Міні-проєкт 1': 12, 'Міні-проєкт 2': 10}
+    ...     }
+    ... }
+    >>> get_sorted_gradebook(gradebook, 'Міні-проєкти')
+    [['Давиденко', 'Олекса', 'ieshchenkodmytro@gmail.com', 22], \
+['Тимченко', 'Ольга', 'gduplii@ivanchenko-vernydub.net', 20]]
+        
     """
-    ...
+    students_sorted = []
+    for student, grades in gradebook.items():
+        if activity:
+            total_score = sum(grades.get(activity, {}).values())
+        else:
+            total_score = sum(
+                score for each_activity in grades.values()
+                for score in each_activity.values()
+            )
+        students_sorted.append(list(student[:3]) + [total_score])
+
+        students_sorted.sort(key=lambda x: x[3], reverse=True)
+
+    return students_sorted
 
 
 # def get_average_students_grade(grades: dict, student: tuple, activity: None | list[tuple[str, str]]) -> float:
